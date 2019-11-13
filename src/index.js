@@ -32,12 +32,8 @@ function returnFirstArgument(n) {
    sumWithDefaults(10) вернет 110
  */
 
-  function sumWithDefaults(a, b) {
-    if(b === undefined){
-      return a + 100;  
-    } else {
+  function sumWithDefaults(a, b = 100) {
       return a + b;
-    }
   };
 
 /*
