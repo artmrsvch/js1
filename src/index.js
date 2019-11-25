@@ -17,7 +17,7 @@
    isAllTrue([100, 2, 3, 4, 5], fn => fn < 10) // вернет false
  */
 function isAllTrue(array, fn) {
-    if (Array.isArray(array) == false || array.length < 1) {
+    if (Object.prototype.toString.call(array) != '[object Array]' || array.length < 1) {
         throw new Error('empty array');
     } else if (typeof(fn) != 'function') {
         throw new Error('fn is not a function');
@@ -52,7 +52,7 @@ function isAllTrue(array, fn) {
 function isSomeTrue(array, fn) {
     let result = 0;
 
-    if (Array.isArray(array) == false || array.length < 1) {
+    if (Object.prototype.toString.call(array) != '[object Array]' || array.length < 1) {
         throw new Error('empty array');
     } else if (typeof(fn) != 'function') {
         throw new Error('fn is not a function');
