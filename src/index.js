@@ -164,6 +164,9 @@ function collectDOMStat(root) {
             if (childs.textContent) {
                 result += 1
             }
+            if (childs.children.length != 0) {
+                result += textsRoot(childs)
+            }
         }
 
         return result
@@ -176,6 +179,9 @@ function collectDOMStat(root) {
                 objTags[childs.tagName] += 1
             } else {
                 objTags[childs.tagName] = 1
+            }
+            if (childs.children.length != 0) {
+                Object.assign(objTags, tagsRoot(childs))
             }
         }
 
@@ -200,11 +206,23 @@ function collectDOMStat(root) {
                     objClass[childs.className] = 1
                 }
             }
+            if (childs.children.length != 0) {    
+                let reqObj = classRoot(childs);
+
+                for (let iter in reqObj) {
+                    if (objClass[iter] == reqObj[iter]) {
+                        objClass[iter] += 1
+                    } else {
+                        objClass[iter] = 1
+                    }
+                }
+                
+            }
         }
 
         return objClass
     }
-
+    
     return obj;
 }
 
