@@ -259,6 +259,39 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
+    const mutationConfig = { childList: true, subtree: true };
+
+    let onMutate = function(mutationsList) {
+        let obj = {}
+        let nodex = []
+
+        mutationsList.forEach(mutation => {
+
+            if (mutation.addedNodes.length != 0) {
+                for (let ty of mutation.addedNodes) {
+                    if (ty.tagName != undefined) {
+                        nodex.push(ty.tagName);
+                        obj.type = 'insert';
+                    }
+                }
+            } else {
+                for (let zy of mutation.removedNodes) {
+                    if (zy.tagName != undefined) {
+                        nodex.push(zy.tagName)
+                        obj.type = 'remove';
+                        
+                    }
+                }
+            }
+            obj.nodes = nodex
+            console.error(obj)
+            fn(obj)    
+        });
+    };
+    
+    let observer = new MutationObserver(onMutate);
+
+    observer.observe(where, mutationConfig);
 }
 
 export {
