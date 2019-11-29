@@ -27,7 +27,21 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
-}
+    const newDiv = document.createElement('div');
+    const divStyle = newDiv.style;
+
+    newDiv.classList.add('draggable-div');
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+    divStyle.backgroundColor = 'rgb('+getRandomInt(0, 255)+', '+getRandomInt(0, 255)+', '+getRandomInt(0, 255)+')';
+    divStyle.width= getRandomInt(0, 500)+'px';
+    divStyle.height= getRandomInt(0, 500)+'px';
+    divStyle.top= getRandomInt(0, 500)+'px';
+    divStyle.left= getRandomInt(0, 500)+'px';
+
+    return newDiv;
+}   
 
 /*
  Функция должна добавлять обработчики событий для перетаскивания элемента при помощи drag and drop
@@ -38,6 +52,28 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
+    target.addEventListener('mousedown', (event) =>{
+        let dragElem = event.target;
+
+        dragElem.style.position = 'absolute';
+        dragElem.style.zIndex = 1000;
+        moveAt(event.pageX, event.pageY);
+        function moveAt(pageX, pageY) {
+            dragElem.style.left = pageX - dragElem.offsetWidth / 2 + 'px';
+            dragElem.style.top = pageY - dragElem.offsetHeight / 2 + 'px';
+        }
+        function onMouseMove(event) {
+            moveAt(event.pageX, event.pageY);
+        } 
+        document.addEventListener('mousemove', onMouseMove);
+        dragElem.onmouseup = function() {
+            document.removeEventListener('mousemove', onMouseMove);
+            dragElem.onmouseup = null;
+        };
+        dragElem.ondragstart = function() {
+            return false;
+        };
+    })
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
