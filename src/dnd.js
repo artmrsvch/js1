@@ -53,9 +53,10 @@ function createDiv() {
  */
 function addListeners(target) {
     target.addEventListener('mousedown', (event) =>{
+        event.preventDefault();    
+        
         let dragElem = event.target;
 
-        document.body.appendChild(dragElem)
         dragElem.style.position = 'absolute';
         if (dragElem.style.zIndex != 0) {
             dragElem.style.zIndex += 1
@@ -72,12 +73,19 @@ function addListeners(target) {
             moveAt(event.pageX, event.pageY);
         } 
         document.addEventListener('mousemove', onMouseMove);
-        dragElem.onmouseup = function() {
+        dragElem.onmouseup = ()=> {
             document.removeEventListener('mousemove', onMouseMove);
             dragElem.style.zIndex = 0;
             dragElem.onmousemove = null;
             dragElem.onmouseup = null;
         };
+        document.oncontextmenu = cmenu; 
+        function cmenu() {
+            location.reload()
+
+            return false; 
+        } 
+
     })
 }
 
