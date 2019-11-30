@@ -55,8 +55,14 @@ function addListeners(target) {
     target.addEventListener('mousedown', (event) =>{
         let dragElem = event.target;
 
+        document.body.appendChild(dragElem)
         dragElem.style.position = 'absolute';
-        dragElem.style.zIndex = 1000;
+        if (dragElem.style.zIndex != 0) {
+            dragElem.style.zIndex += 1
+        } else {
+            dragElem.style.zIndex = 10;
+        }
+        
         moveAt(event.pageX, event.pageY);
         function moveAt(pageX, pageY) {
             dragElem.style.left = pageX - dragElem.offsetWidth / 2 + 'px';
@@ -68,10 +74,9 @@ function addListeners(target) {
         document.addEventListener('mousemove', onMouseMove);
         dragElem.onmouseup = function() {
             document.removeEventListener('mousemove', onMouseMove);
+            dragElem.style.zIndex = 0;
+            dragElem.onmousemove = null;
             dragElem.onmouseup = null;
-        };
-        dragElem.ondragstart = function() {
-            return false;
         };
     })
 }
