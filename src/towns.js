@@ -1,3 +1,4 @@
+import { loadAndSortTowns } from './index'
 /*
  Страница должна предварительно загрузить список городов из
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
@@ -37,31 +38,23 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
-    return new Promise(function (resolve, reject) {
-        fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
-            .then(resp => resp.json())
-            .then(towns => {
-                let sortTowns = towns.sort((a, b) => {
-                    return a.name > b.name ? 1 : -1;
-                })
-   
-                resolve(sortTowns);
-                loadingBlock.style.display = 'none';
-                filterBlock.style.display = 'block';
-            })
-            .catch(()=> {
-                loadingBlock.style.display = 'none';
-                let btn = document.createElement('button');
-                let errDiv = document.createElement('div');
+    try {
+        let bootsTown = loadAndSortTowns();
 
-                btn.textContent = 'Повторить';
-                errDiv.textContent = 'Не удалось загрузить города';
-                homeworkContainer.appendChild(errDiv)
-                homeworkContainer.appendChild(btn)
-                reject()
-            })
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'block';
 
-    })
+        return bootsTown;
+    } catch (e) {
+        loadingBlock.style.display = 'none';
+        let btn = document.createElement('button');
+        let errDiv = document.createElement('div');
+
+        btn.textContent = 'Повторить';
+        errDiv.textContent = 'Не удалось загрузить города';
+        homeworkContainer.appendChild(errDiv)
+        homeworkContainer.appendChild(btn)            
+    } 
 }
 
 homeworkContainer.addEventListener('click', (e)=> {

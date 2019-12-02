@@ -26,18 +26,17 @@ function delayPromise(seconds) {
    loadAndSortTowns().then(towns => console.log(towns)) // должна вывести в консоль отсортированный массив городов
  */
 function loadAndSortTowns() {
-    return new Promise((resolved) => {
-        const xhr = new XMLHttpRequest(),
-            url = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
-        
-        xhr.open('GET', url);
-        xhr.send();
-        xhr.addEventListener('load', ()=> {
-            const towns = JSON.parse(xhr.responseText)
-            const townsSort = towns.sort((a, b) => a.name > b.name ? 1 : -1)
-            
-            resolved(townsSort);
-        })
+    // eslint-disable-next-line no-unused-vars
+    return new Promise(function (resolve, reject) {
+        fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
+            .then(resp => resp.json())
+            .then(towns => {
+                let sortTowns = towns.sort((a, b) => {
+                    return a.name > b.name ? 1 : -1;
+                })
+                
+                resolve(sortTowns);
+            })
 
     })
 }
