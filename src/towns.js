@@ -64,6 +64,11 @@ function loadTowns() {
     })
 }
 
+homeworkContainer.addEventListener('click', (e)=> {
+    if ( e.target.tagName == 'BUTTON') {
+        location.reload();
+    }
+})
 /*
  Функция должна проверять встречается ли подстрока chunk в строке full
  Проверка должна происходить без учета регистра символов
