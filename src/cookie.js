@@ -31,6 +31,7 @@
    const newDiv = document.createElement('div');
    homeworkContainer.appendChild(newDiv);
  */
+
 const homeworkContainer = document.querySelector('#homework-container');
 // текстовое поле для фильтрации cookie
 const filterNameInput = homeworkContainer.querySelector('#filter-name-input');
@@ -42,11 +43,95 @@ const addValueInput = homeworkContainer.querySelector('#add-value-input');
 const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
+ 
+function cookieObj () { 
+    let temp = document.cookie.split('; ').reduce((prev, current)=> {
+        const [name, value] = current.split('=');
+
+        prev[name] = value;
+
+        return prev;
+    }, {})
+
+    return temp;
+}
+
+function isMatching (key, chunk, valKey) {
+
+    key = key.toLowerCase();
+    chunk = chunk.toLowerCase();
+    valKey = valKey.toLowerCase();
+    if (key.includes(chunk) || valKey.includes(chunk)) {
+        return true;
+    }
+}
+
+listTable.addEventListener('click', (e)=> {
+    if ( e.target.tagName == 'BUTTON') {
+        const parents = e.target.parentNode.parentNode;
+
+        document.cookie = `${parents.childNodes[0].textContent}=${parents.childNodes[1].textContent}; max-age = -3600`;
+        parents.remove();
+
+    }
+})
+
+function addTemp () {
+    let cooc = cookieObj ();
+
+    // eslint-disable-next-line guard-for-in
+    for (let item in cooc) { 
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `<th>${item}</th><th>${cooc[item]}</th><th><button>удоли</button></th>`;
+        listTable.appendChild(tr)    
+    }
+}
+addTemp ()
 
 filterNameInput.addEventListener('keyup', function() {
-    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    let cooc = cookieObj ();
+
+    listTable.innerHTML = '';
+    for (let key in cooc) {
+        if (filterNameInput.value == '') {
+            break;
+        } else if (isMatching(key, filterNameInput.value, cooc[key])) {
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `<th>${key}</th><th>${cooc[key]}</th><th><button>удоли</button></th>`;
+            listTable.appendChild(tr) 
+        }
+    }
+    if (filterNameInput.value == '') {
+        addTemp ()
+    }
 });
 
 addButton.addEventListener('click', () => {
-    // здесь можно обработать нажатие на кнопку "добавить cookie"
+    let cooc = cookieObj ();
+
+    for (let tik in cooc) {
+        if (addNameInput.value == tik) {
+            for (let yzel of listTable.childNodes) {
+                if (yzel.childNodes[0] == undefined) {
+                    continue
+                } else if (yzel.childNodes[0].textContent == tik) {
+                    yzel.remove()
+                }
+            }
+        }    
+    }
+    if (isMatching(addNameInput.value, filterNameInput.value, addValueInput.value)) {
+        
+        const tr = document.createElement('tr');
+
+        document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+        tr.innerHTML = `<th>${addNameInput.value}</th><th>${addValueInput.value}</th><th><button>удоли</button></th>`;
+        listTable.appendChild(tr)
+        cookieObj ();
+    } else {
+        document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+        cookieObj ();
+    }
 });
