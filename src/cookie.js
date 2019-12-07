@@ -114,9 +114,7 @@ addButton.addEventListener('click', () => {
     for (let tik in cooc) {
         if (addNameInput.value == tik) {
             for (let yzel of listTable.childNodes) {
-                if (yzel.childNodes[0] == undefined) {
-                    continue
-                } else if (yzel.childNodes[0].textContent == tik) {
+                if (yzel.children[0].textContent == tik) {
                     yzel.remove()
                 }
             }
